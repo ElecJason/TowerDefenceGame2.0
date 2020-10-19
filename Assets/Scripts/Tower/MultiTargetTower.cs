@@ -6,6 +6,9 @@ using UnityEngine;
 public class MultiTargetTower : Tower
 {
     private Enemy[] _enemies;
+    private bool waited = true;
+    [SerializeField] private float _fireRate = 0.4f;
+    [SerializeField] private float _damage = 10f;
 
     protected override bool CanAttack()
     {
@@ -17,7 +20,6 @@ public class MultiTargetTower : Tower
                 return true;
             }
         }
-
         return false;
     }
 
@@ -25,7 +27,18 @@ public class MultiTargetTower : Tower
     {
         foreach(var enemy in _enemies)
         {
-            print("Val deze vijand aan: " + enemy.name);
+            if (CanAttack() == true && waited == true)
+            {
+                StartCoroutine(WaitForShot());
+                waited = false;
+                enemy.GetComponent<Enemy>().TakeDmg(_damage);
+                //Debug.Log("Val deze vijand aan: " + enemy.name);
+            }
         }
+    }
+    protected IEnumerator WaitForShot()
+    {
+        yield return new WaitForSeconds(_fireRate);
+        waited = true;
     }
 }

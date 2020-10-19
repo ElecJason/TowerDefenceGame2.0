@@ -8,9 +8,10 @@ public class PathShower : Path
 {
     [SerializeField] private float _speed = 6;
     [SerializeField] private float _arrivalthreshold = 0.1f;
+    [SerializeField] private TrailRenderer trailRenderer;
 
     private void Start()
-    {
+    {   
         GetNextWaypoint();
     }
 
@@ -24,11 +25,15 @@ public class PathShower : Path
         {
             if (waypointIndex == waypointsArray.Length - 1)
             {
+                trailRenderer.enabled = false;
                 waypointIndex = 0;
                 transform.position = waypointsArray[0].transform.position;
+                trailRenderer.Clear();
+                trailRenderer.enabled = true;
             }
             else
             {
+                //Debug.DrawLine(waypointsArray[waypointIndex].transform.position, waypointsArray[waypointIndex + 1].transform.position, Color.magenta, Mathf.Infinity);
                 waypointIndex += 1;
             }
         }

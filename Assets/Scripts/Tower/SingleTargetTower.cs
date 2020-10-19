@@ -5,6 +5,9 @@ using UnityEngine;
 public class SingleTargetTower : Tower
 {
     private Enemy _target;
+    private bool waited = true;
+    [SerializeField] private float _fireRate = 1f;
+    [SerializeField] private float _damage = 25f;
 
     protected override bool CanAttack()
     {
@@ -14,6 +17,18 @@ public class SingleTargetTower : Tower
 
     protected override void Attack()
     {
-        Debug.Log("Ik heb 1 target en val deze aan");
+        if(CanAttack() == true && waited == true)
+        {
+            StartCoroutine(WaitForShot());
+            waited = false;
+            _target.GetComponent<Enemy>().TakeDmg(_damage);
+            //Debug.Log("I attacked this many times");
+        }
+    }
+
+    protected IEnumerator WaitForShot()
+    {
+        yield return new WaitForSeconds(_fireRate);
+        waited = true;
     }
 }

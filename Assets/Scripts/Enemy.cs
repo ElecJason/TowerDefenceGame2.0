@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 public class Enemy : MonoBehaviour
 {
     [SerializeField] private Slider _hpSlider;
     [SerializeField] private float _currentHealth;
-    [SerializeField] private float health = 10;
     [SerializeField] private float _startHealth = 100;
     void Start()
     {
@@ -17,10 +17,16 @@ public class Enemy : MonoBehaviour
     private void Update()
     {
         _hpSlider.value = _currentHealth;
+
+        if(_currentHealth <= 0)
+        {
+            Debug.Log("Ik ben dood");
+            Destroy(gameObject);
+        }
     }
 
-    public void TakeDmg()
+    public void TakeDmg(float dmg)
     {       
-        _currentHealth -= 10;
+        _currentHealth -= dmg;
     }
 }

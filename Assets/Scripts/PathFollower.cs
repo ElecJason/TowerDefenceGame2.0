@@ -6,7 +6,7 @@ public class PathFollower : Path
 {
     [SerializeField] private float _speed = 30;
     [SerializeField] private float _arrivalthreshold = 0.1f;
-    [SerializeField] private UnityEvent dmg;
+    [SerializeField] private UnityEvent playerDmg;
     [SerializeField] private UnityEvent dmgparticle;
 
     private void Start()
@@ -25,9 +25,9 @@ public class PathFollower : Path
         {
             if (waypointIndex == waypointsArray.Length - 1)
             {
-                print("Ik ben bij het eindpunt");
+                //Debug.Log("Ik ben bij het eindpunt"); dit stukje code voor als je het eindpunt bereikt
                 Destroy(this.gameObject);
-                dmg.Invoke();
+                playerDmg.Invoke();
                 dmgparticle.Invoke();
             }
             else

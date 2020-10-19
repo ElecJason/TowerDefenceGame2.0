@@ -1,14 +1,18 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class TowerBuilder : MonoBehaviour
 {
     [SerializeField] private Material _material;
     [SerializeField] private Tower[] _towers;
     [SerializeField] private LayerMask _floorLayer;
+    [SerializeField] private LayerMask _towerLayer;
 
-    [SerializeField] private float _radius = 2;
+    [SerializeField] private float _radius = 1.5f;
+    private Vector3 _offset = new Vector3(0,0.5f,0);
 
     private RaycastHit hit;
     private float _distance = 10;
@@ -48,13 +52,20 @@ public class TowerBuilder : MonoBehaviour
     {
         // instantieer een toren, maar zorg dat deze nog niet werkt
         // zet de _selectedTower variable
-
         Debug.Log("Plaats");
-         _selectedTower = Instantiate(tower, transform);
+        _selectedTower = Instantiate(tower, hit.transform);
+        _selectedTower.enabled = false;
+        _material = _selectedTower.GetComponent<Renderer>().material;
     }
 
     private void PlaceTower()
     {
+        if (Input.GetKeyDown(KeyCode.Mouse0) && ValidateLocation() == true)
+        {
+            _material.color = Color.white;
+            _selectedTower.enabled = true;
+            _selectedTower = null;
+        }
         // update de kleur van de toren terug naar de originele kleur
         // zet de toren 'aan'
         // zet de _selectedTower variabel weer terug naar null (letop: niet 0)!
@@ -66,27 +77,28 @@ public class TowerBuilder : MonoBehaviour
     private void UpdateTowerPosition()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
         Debug.DrawRay(ray.origin, ray.direction * 100, Color.red);
 
-        if (Physics.Raycast(ray, out hit, _distance, _floorLayer))
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, _floorLayer))
         {
-            _selectedTower.transform.position = hit.point;
-            Debug.Log(hit);
+            _selectedTower.transform.position = hit.point + _offset;
         }
-
-        
         // update de positie van de toren naar de muispositie
-    
     }
     private bool ValidateLocation()
-    {
-        Collider[] cols = Physics.OverlapSphere(transform.position, _radius, ~_floorLayer);
-
-        if (cols.Length < 1)
+    {   
+        Collider[] cols = Physics.OverlapSphere(_selectedTower.transform.position, 1);
+        for (int i = 0; i < cols.Length; i++)
         {
+            Debug.Log(cols[i]);
+        }
+        if (cols.Length <= 2)
+        {
+            _material.color = Color.green;
             return true;
         }
-        Debug.Log("Ik raak niks");
+        _material.color = Color.red;
         return false;
 
             // check of de toren collide met objecten.
@@ -97,6 +109,12 @@ public class TowerBuilder : MonoBehaviour
     }
     public void DeselectTower()
     {
-        Destroy(_selectedTower);
+        Destroy(_selectedTower.gameObject);
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawWireSphere(transform.position, _radius);
     }
 }

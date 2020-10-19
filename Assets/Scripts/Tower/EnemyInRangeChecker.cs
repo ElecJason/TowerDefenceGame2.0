@@ -12,7 +12,6 @@ public class EnemyInRangeChecker : MonoBehaviour
         Collider[] cols = Physics.OverlapSphere(transform.position, _radius, _layer);
         if(cols.Length < 1)
             return null;
-
         return cols[0].GetComponent<Enemy>();
     }
 
@@ -27,7 +26,6 @@ public class EnemyInRangeChecker : MonoBehaviour
         {
             enemiesInRange.Add(col.GetComponent<Enemy>());
         }
-
         return enemiesInRange.ToArray();
     }
 

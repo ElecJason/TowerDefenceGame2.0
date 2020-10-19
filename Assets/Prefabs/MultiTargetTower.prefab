@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5020576607219455476}
   - component: {fileID: 8669957363163275160}
   - component: {fileID: 8211148803622550442}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: MultiTargetTower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -121,3 +121,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c6519dc2eee9f34e82c1255d3d5187d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _fireRate: 0.2
+  _damage: 10
